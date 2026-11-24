@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DP Lab | مختبر البرمجة الديناميكية</title>
+<style>
+:root{--bg:#0b1220;--panel:#111c30;--panel2:#16243b;--line:#263752;--text:#edf4ff;--muted:#9fb0c9;--blue:#63a5ff;--cyan:#4de0d0;--green:#4ade80;--orange:#ffbd69;--red:#fb7185}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0%,#172b4b 0,transparent 32%),var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;line-height:1.7}
+.wrap{max-width:1180px;margin:auto;padding:28px 20px 60px}.hero{display:flex;justify-content:space-between;align-items:center;gap:20px;margin-bottom:24px}.eyebrow{color:var(--cyan);font-size:13px;font-weight:bold;letter-spacing:1px}.hero h1{font-size:clamp(26px,4vw,40px);margin:4px 0}.hero p{color:var(--muted);margin:0}.chip{border:1px solid #315078;background:#132744;color:#b9d8ff;padding:8px 14px;border-radius:99px;white-space:nowrap}
+.tabs{display:flex;gap:10px;margin:20px 0}.tab,button{cursor:pointer;border:1px solid var(--line);border-radius:12px;padding:10px 16px;background:#17263e;color:var(--text);font:inherit;transition:.2s}.tab.active,button.primary{background:linear-gradient(120deg,#2563eb,#087f9c);border-color:transparent}.tab:hover,button:hover{transform:translateY(-1px);border-color:var(--blue)}button:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.layout{display:grid;grid-template-columns:340px 1fr;gap:18px}.panel{background:linear-gradient(160deg,var(--panel),#0f192b);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 12px 35px #0003}.panel h2,.panel h3{margin:0 0 12px}.muted{color:var(--muted);font-size:14px}.field{margin:13px 0}.field label{display:block;color:#c6d5e9;font-size:14px;margin-bottom:5px}.field input{width:100%;background:#091323;border:1px solid #30435f;border-radius:10px;padding:11px;color:white;font:inherit;outline:none}.field input:focus{border-color:var(--blue)}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:15px}.actions button{font-size:14px;padding:8px 12px}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}.stat{background:#0b1729;border:1px solid var(--line);border-radius:13px;padding:12px}.stat small{color:var(--muted);display:block}.stat strong{font-size:21px;color:var(--cyan)}
+.visual{min-width:0}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:14px;margin-top:12px}.dp{border-collapse:separate;border-spacing:4px;width:100%;min-width:500px;text-align:center;font-size:13px}.dp th{color:#b6c8df;font-weight:600;background:#182942;padding:8px;border-radius:7px}.dp td{background:#101f34;border:1px solid #263c59;border-radius:7px;padding:8px;min-width:38px;transition:.2s}.dp td.current{background:#174f72;border-color:var(--cyan);box-shadow:0 0 0 2px #4de0d044}.dp td.chosen{background:#145438;border-color:var(--green)}.dp td.path{outline:2px solid var(--orange)}.legend{display:flex;gap:15px;flex-wrap:wrap;color:var(--muted);font-size:12px;margin:10px 0}.dot{display:inline-block;width:9px;height:9px;border-radius:3px;margin-left:5px}.stepbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:16px 0}.stepbar span{color:var(--muted);font-size:13px}.explain{background:#0b1a2e;border-right:3px solid var(--cyan);padding:12px 15px;border-radius:10px;margin-top:12px;min-height:58px}.result{border:1px solid #27634e;background:#0c2a25;border-radius:14px;padding:14px;margin-top:15px}.result strong{color:var(--green)}.items{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.pill{background:#183b36;border:1px solid #2b6b59;padding:5px 10px;border-radius:8px;font-size:13px}.hidden{display:none}.formula{direction:ltr;text-align:left;background:#091323;border:1px solid var(--line);padding:12px;border-radius:10px;font-family:Consolas,monospace;color:#b9d8ff;overflow:auto}.footer{text-align:center;color:#7185a2;font-size:12px;margin-top:25px}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.hero{align-items:flex-start;flex-direction:column}.stats{grid-template-columns:repeat(3,1fr)}}@media(max-width:480px){.wrap{padding:18px 12px}.panel{padding:15px}.stats{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="hero"><div><div class="eyebrow">DYNAMIC PROGRAMMING • INTERACTIVE VISUALIZER</div><h1>مختبر البرمجة الديناميكية</h1><p>افهم الخوارزمية، تابع بناء جدول DP خطوة بخطوة، وشاهد كيف نصل للحل الأمثل.</p></div><div class="chip">مشروع مادة Dynamic Programming</div></header>
+<div class="tabs"><button class="tab active" id="knapTab" onclick="switchMode('knap')">01 · مشكلة الحقيبة (Knapsack)</button><button class="tab" id="coinTab" onclick="switchMode('coin')">02 · أقل عدد عملات (Coin Change)</button></div>
+<div class="layout">
+<aside class="panel">
+<h2 id="formTitle">إعدادات مشكلة الحقيبة</h2><p class="muted" id="formDesc">اختر العناصر وسعة الحقيبة، ثم شغّل الحل الديناميكي.</p>
+<div id="knapForm">
+<div class="field"><label>الأوزان (افصل بينها بفاصلة)</label><input id="weights" value="2,3,4,5"></div>
+<div class="field"><label>القيم (بنفس ترتيب الأوزان)</label><input id="values" value="3,4,5,6"></div>
+<div class="field"><label>سعة الحقيبة</label><input id="capacity" type="number" min="1" max="40" value="5"></div>
+</div>
+<div id="coinForm" class="hidden">
+<div class="field"><label>فئات العملات (افصل بينها بفاصلة)</label><input id="coins" value="1,3,4"></div>
+<div class="field"><label>المبلغ المطلوب</label><input id="amount" type="number" min="0" max="60" value="6"></div>
+</div>
+<div class="actions"><button class="primary" onclick="start()">حل المشكلة</button><button onclick="loadExample()">مثال جاهز</button><button onclick="resetAll()">إعادة ضبط</button></div>
+<hr style="border-color:var(--line);margin:20px 0">
+<h3>الفكرة الأساسية</h3>
+<p class="muted" id="idea">نقسم المشكلة إلى حالات أصغر، ونخزن أفضل نتيجة لكل حالة في جدول بدل إعادة حسابها.</p>
+<div class="formula" id="formula">dp[i][w] = max(dp[i-1][w], value[i] + dp[i-1][w-weight[i]])</div>
+<p class="muted" id="complexity">Time: O(n × W) &nbsp; | &nbsp; Space: O(n × W)</p>
+</aside>
+<main class="visual">
+<div class="stats"><div class="stat"><small>الحالة الحالية</small><strong id="progress">—</strong></div><div class="stat"><small>عدد الحالات</small><strong id="states">—</strong></div><div class="stat"><small>أفضل نتيجة</small><strong id="best">—</strong></div></div>
+<section class="panel">
+<h2 id="tableTitle">جدول البرمجة الديناميكية</h2><p class="muted" id="tableDesc">كل خلية تمثل أفضل قيمة يمكن الوصول إليها عند عدد معين من العناصر وسعة محددة.</p>
+<div class="legend"><span><i class="dot" style="background:#174f72"></i>الخلية الحالية</span><span><i class="dot" style="background:#145438"></i>تم اختيارها في الحل</span><span><i class="dot" style="background:#ffbd69"></i>مسار استرجاع الحل</span></div>
+<div class="table-wrap"><table class="dp" id="dpTable"></table></div>
+<div class="stepbar"><button onclick="prevStep()">السابق</button><button class="primary" onclick="nextStep()">الخطوة التالية</button><button onclick="playAll()">عرض الحل كاملًا</button><span id="stepLabel">لم يبدأ الحل بعد</span></div>
+<div class="explain" id="explanation">اضغط «حل المشكلة» لبدء بناء جدول DP ومتابعة كل حالة.</div>
+<div class="result hidden" id="result"></div>
+</section>
+</main>
+</div>
+<div class="footer">DP Lab — Educational project • Built with HTML, CSS & JavaScript</div>
+</div>
+<script>
+let mode='knap', matrix=[], steps=[], step=0, solution=null, inputData=null;
+const $=id=>document.getElementById(id);
+function switchMode(m){mode=m;$('knapTab').classList.toggle('active',m==='knap');$('coinTab').classList.toggle('active',m==='coin');$('knapForm').classList.toggle('hidden',m!=='knap');$('coinForm').classList.toggle('hidden',m!=='coin');$('formTitle').textContent=m==='knap'?'إعدادات مشكلة الحقيبة':'إعدادات مشكلة العملات';$('formDesc').textContent=m==='knap'?'اختر العناصر وسعة الحقيبة، ثم شغّل الحل الديناميكي.':'حدد فئات العملات والمبلغ، ثم ابحث عن أقل عدد من العملات.';$('idea').textContent=m==='knap'?'لكل عنصر خياران: نأخذه أو نتركه. نختار القرار الذي يعطي أكبر قيمة دون تجاوز السعة.':'نجرّب كل فئة عملة كآخر عملة في الحل، ونحتفظ بأقل عدد عملات لكل مبلغ أصغر.';$('formula').textContent=m==='knap'?'dp[i][w] = max(dp[i-1][w], value[i] + dp[i-1][w-weight[i]])':'dp[x] = 1 + min(dp[x - coin])';$('complexity').textContent=m==='knap'?'Time: O(n × W) | Space: O(n × W)':'Time: O(amount × number of coins) | Space: O(amount)';$('tableTitle').textContent=m==='knap'?'جدول الحقيبة DP[i][w]':'جدول أقل عدد عملات DP[x]';$('tableDesc').textContent=m==='knap'?'الصفوف تمثل عدد العناصر المتاحة، والأعمدة تمثل سعة الحقيبة.':'كل عمود يمثل مبلغًا، والقيمة داخله هي أقل عدد عملات لتكوين هذا المبلغ.';resetAll()}
+function parseList(id){return $(id).value.split(',').map(x=>Number(x.trim())).filter(x=>Number.isFinite(x)&&x>0&&Number.isInteger(x))}
+function start(){
+ steps=[];step=0;solution=null;
+ if(mode==='knap'){
+  let w=parseList('weights'),v=parseList('values'),cap=Number($('capacity').value);
+  if(!w.length||w.length!==v.length||w.length>9||!Number.isInteger(cap)||cap<1||cap>40){alert('تأكد من إدخال أوزان وقيم متساوية العدد، وسعة من 1 إلى 40.');return}
+  inputData={w,v,cap};let n=w.length;matrix=Array.from({length:n+1},()=>Array(cap+1).fill(0));
+  for(let i=1;i<=n;i++)for(let c=0;c<=cap;c++){let a=matrix[i-1][c],b=w[i-1]<=c?v[i-1]+matrix[i-1][c-w[i-1]]:-Infinity;matrix[i][c]=Math.max(a,b);steps.push({i,c,val:matrix[i][c],desc:`العنصر ${i} (وزنه ${w[i-1]} وقيمته ${v[i-1]}) عند سعة ${c}: ${w[i-1]<=c?`نقارن تركه (${a}) بأخذه (${b})`:`لا يمكن أخذه لأن وزنه أكبر من السعة`}. النتيجة = ${matrix[i][c]}.`})}
+  let chosen=[],c=cap;for(let i=n;i>0;i--)if(matrix[i][c]!==matrix[i-1][c]){chosen.push(i-1);c-=w[i-1]}chosen.reverse();solution={value:matrix[n][cap],chosen};$('states').textContent=(n+1)*(cap+1);$('best').textContent=solution.value;
+ }else{
+  let coins=parseList('coins'),amt=Number($('amount').value);if(!coins.length||coins.length>10||!Number.isInteger(amt)||amt<0||amt>60){alert('أدخل عملات صحيحة ومبلغًا من 0 إلى 60.');return}
+  inputData={coins,amt};let inf=999;matrix=[Array(amt+1).fill(inf)];let prev=Array(amt+1).fill(-1);matrix[0][0]=0;
+  for(let x=1;x<=amt;x++){for(let coin of coins)if(coin<=x&&matrix[0][x-coin]+1<matrix[0][x]){matrix[0][x]=matrix[0][x-coin]+1;prev[x]=coin}steps.push({i:0,c:x,val:matrix[0][x],desc:`للمبلغ ${x}: نجرب العملات التي لا تتجاوز المبلغ، ونختار أقل قيمة من 1 + DP[${x} - العملة].`})}
+  let chosen=[],x=amt;if(matrix[0][amt]!==inf)while(x>0&&prev[x]!==-1){chosen.push(prev[x]);x-=prev[x]}solution={value:matrix[0][amt]===inf?'غير ممكن':matrix[0][amt],chosen};$('states').textContent=amt+1;$('best').textContent=solution.value;
+ }
+ $('progress').textContent='0 / '+steps.length;$('result').classList.add('hidden');render();showStep();
+}
+function render(){let t=$('dpTable');t.innerHTML='';if(!matrix.length)return;let head=document.createElement('tr');if(mode==='knap'){head.innerHTML='<th>العناصر \\ السعة</th>'+matrix[0].map((_,i)=>`<th>${i}</th>`).join('');t.appendChild(head);matrix.forEach((row,r)=>{let tr=document.createElement('tr');tr.innerHTML=`<th>${r===0?'0 عناصر':`أول ${r} عناصر`}</th>`+row.map((v,c)=>`<td id="cell-${r}-${c}">${v}</td>`).join('');t.appendChild(tr)})}else{head.innerHTML='<th>المبلغ</th>'+matrix[0].map((_,i)=>`<th>${i}</th>`).join('');t.appendChild(head);let tr=document.createElement('tr');tr.innerHTML='<th>أقل عدد</th>'+matrix[0].map(v=>`<td>${v>=999?'∞':v}</td>`).join('');t.appendChild(tr)}}
+function showStep(){document.querySelectorAll('.dp td').forEach(x=>x.classList.remove('current','chosen','path'));if(!steps.length){$('stepLabel').textContent='لم يبدأ الحل بعد';return}let s=steps[Math.max(0,step-1)];if(step>0&&mode==='knap')$('cell-'+s.i+'-'+s.c)?.classList.add('current');if(step>0&&mode==='coin')document.querySelectorAll('.dp td')[s.c]?.classList.add('current');$('progress').textContent=step+' / '+steps.length;$('stepLabel').textContent=`الخطوة ${step} من ${steps.length}`;$('explanation').textContent=step===0?'ابدأ بالضغط على الخطوة التالية.':s.desc;if(step===steps.length)showResult()}
+function nextStep(){if(!steps.length)return;if(step<steps.length)step++;showStep()}
+function prevStep(){if(step>0)step--;showStep()}
+function playAll(){if(!steps.length)return;step=steps.length;showStep()}
+function showResult(){let r=$('result');r.classList.remove('hidden');if(mode==='knap'){let d=inputData,items=solution.chosen.map(i=>`<span class="pill">عنصر ${i+1} — وزن ${d.w[i]} — قيمة ${d.v[i]}</span>`).join('');r.innerHTML=`<strong>الحل الأمثل: إجمالي القيمة = ${solution.value}</strong><div class="muted">العناصر المختارة:</div><div class="items">${items||'لا توجد عناصر مختارة'}</div><div class="muted" style="margin-top:8px">إجمالي الوزن: ${solution.chosen.reduce((s,i)=>s+d.w[i],0)} من ${d.cap}</div>`;solution.chosen.forEach(i=>{let c=d.cap;for(let j=d.w.length;j>i+1;j--)if(matrix[j][c]!==matrix[j-1][c])c-=d.w[j-1];for(let x=0;x<=d.cap;x++)$('cell-'+(i+1)+'-'+x)?.classList.add('chosen')})}else{r.innerHTML=`<strong>النتيجة: ${solution.value==='غير ممكن'?'لا يمكن تكوين المبلغ بالعملات المتاحة':`نحتاج ${solution.value} عملة`}</strong><div class="items">${solution.chosen.map(c=>`<span class="pill">${c}</span>`).join('')||'—'}</div>`}}
+function loadExample(){if(mode==='knap'){$('weights').value='2,3,4,5';$('values').value='3,4,5,6';$('capacity').value=5}else{$('coins').value='1,3,4';$('amount').value=6}start()}
+function resetAll(){matrix=[];steps=[];step=0;solution=null;$('dpTable').innerHTML='';$('progress').textContent='—';$('states').textContent='—';$('best').textContent='—';$('stepLabel').textContent='لم يبدأ الحل بعد';$('explanation').textContent='اضغط «حل المشكلة» لبدء بناء جدول DP ومتابعة كل حالة.';$('result').classList.add('hidden')}
+</script>
+</body></html>
